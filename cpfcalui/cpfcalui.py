@@ -13,7 +13,7 @@ import pandas as pd
 class Ui_cpfcalui(object):
     def setupUi(self, cpfcalui):
         cpfcalui.setObjectName("cpfcalui")
-        cpfcalui.resize(885, 979)
+        cpfcalui.resize(1000, 979)
         self.label = QtWidgets.QLabel(cpfcalui)
         self.label.setGeometry(QtCore.QRect(30, 10, 301, 81))
         font = QtGui.QFont()
@@ -66,8 +66,6 @@ class Ui_cpfcalui(object):
         self.listWidget = QtWidgets.QListWidget(self.scrollAreaWidgetContents)
         self.listWidget.setGeometry(QtCore.QRect(0, 0, 300, 121))
         self.listWidget.setObjectName("listWidget")
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.pushButton = QtWidgets.QPushButton(self.tab)
         self.pushButton.setGeometry(QtCore.QRect(280, 250, 61, 31))
@@ -192,8 +190,6 @@ class Ui_cpfcalui(object):
         self.listWidget_2 = QtWidgets.QListWidget(self.tab_2)
         self.listWidget_2.setGeometry(QtCore.QRect(120, 120, 300, 121))
         self.listWidget_2.setObjectName("listWidget_2")
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget_2.addItem(item)
         self.pushButton_4 = QtWidgets.QPushButton(self.tab_2)
         self.pushButton_4.setGeometry(QtCore.QRect(360, 250, 61, 31))
         self.pushButton_4.setObjectName("pushButton_4")
@@ -223,6 +219,22 @@ class Ui_cpfcalui(object):
         self.label_12.setPixmap(QtGui.QPixmap("photo_2018-10-01_20-06-39.jpg"))
         self.label_12.setScaledContents(True)
         self.label_12.setObjectName("label_12")
+        self.line = QtWidgets.QFrame(cpfcalui)
+        self.line.setGeometry(QtCore.QRect(480, 0, 20, 981))
+        self.line.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.line.setLineWidth(5)
+        self.line.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line.setObjectName("line")
+        self.label_23 = QtWidgets.QLabel(cpfcalui)
+        self.label_23.setGeometry(QtCore.QRect(520, 30, 411, 111))
+        font = QtGui.QFont()
+        font.setFamily("MS Serif")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_23.setFont(font)
+        self.label_23.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_23.setObjectName("label_23")
         
     
 
@@ -245,8 +257,6 @@ class Ui_cpfcalui(object):
         self.label_5.setText(_translate("cpfcalui", "Salary at age :"))
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(True)
-        item = self.listWidget.item(0)
-        item.setText(_translate("cpfcalui", "Demo"))
         self.listWidget.setSortingEnabled(__sortingEnabled)
         self.pushButton.setText(_translate("cpfcalui", "Add"))
         self.label_6.setText(_translate("cpfcalui", "Age :"))
@@ -288,8 +298,6 @@ class Ui_cpfcalui(object):
         self.label_21.setText(_translate("cpfcalui", "Current amount in accounts :"))
         __sortingEnabled = self.listWidget_2.isSortingEnabled()
         self.listWidget_2.setSortingEnabled(False)
-        item = self.listWidget_2.item(0)
-        item.setText(_translate("cpfcalui", "Demo"))
         self.listWidget_2.setSortingEnabled(__sortingEnabled)
         self.pushButton_4.setText(_translate("cpfcalui", "Del"))
         self.lineEdit_17.setText(_translate("cpfcalui", "Age"))
@@ -304,6 +312,7 @@ class Ui_cpfcalui(object):
         self.pushButton_3.clicked.connect(self.cal_cpf)
         self.pushButton_4.clicked.connect(self.delete_item_listWidget2)
         self.pushButton_5.clicked.connect(self.add_item_listWidget2)
+        self.label_23.setText(_translate("cpfcalui", "End Message"))
         
 
 
@@ -340,6 +349,7 @@ class Ui_cpfcalui(object):
         d = {'Age': age, 'Salary': salary}
         df = pd.DataFrame(data=d)
         print(df)
+        self.label_23.setText("test")
        
 
 
