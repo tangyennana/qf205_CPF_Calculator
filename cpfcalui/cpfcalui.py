@@ -9,6 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import numpy as np
 import pandas as pd
+import contribution_each_account
 
 class Ui_cpfcalui(object):
     def setupUi(self, cpfcalui):
@@ -348,8 +349,12 @@ class Ui_cpfcalui(object):
             salary.append(word[second+9:len(word)])
         d = {'Age': age, 'Salary': salary}
         df = pd.DataFrame(data=d)
-        print(df)
+
+        contribution_each_account.calculate_each_account(df)
+        # print(df)
         self.label_23.setText("test")
+
+        # return df
        
 
 
