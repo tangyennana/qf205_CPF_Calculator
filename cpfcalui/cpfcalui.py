@@ -6,15 +6,20 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, QtMultimedia
 import numpy as np
 import pandas as pd
-import contribution_each_account
+from contribution_each_account import calculate_each_account
+from getyearlybal import person
+from escalating import escalatingPlan
+from StandardPlan import standardPlan
+from basic_plan2 import basic_plan
+from GraphQT import GraphApp,PlotCanvas
 
 class Ui_cpfcalui(object):
     def setupUi(self, cpfcalui):
         cpfcalui.setObjectName("cpfcalui")
-        cpfcalui.resize(1000, 979)
+        cpfcalui.resize(1500, 979)
         self.label = QtWidgets.QLabel(cpfcalui)
         self.label.setGeometry(QtCore.QRect(30, 10, 301, 81))
         font = QtGui.QFont()
@@ -39,13 +44,17 @@ class Ui_cpfcalui(object):
         self.label_3.setGeometry(QtCore.QRect(10, 40, 231, 16))
         self.label_3.setObjectName("label_3")
         self.lineEdit_2 = QtWidgets.QLineEdit(self.tab)
-        self.lineEdit_2.setGeometry(QtCore.QRect(190, 40, 101, 22))
+        self.lineEdit_2.setGeometry(QtCore.QRect(190, 40, 61, 22))
         self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.lineEdit_3 = QtWidgets.QLineEdit(self.tab)
-        self.lineEdit_3.setGeometry(QtCore.QRect(320, 40, 101, 22))
+        self.lineEdit_3.setGeometry(QtCore.QRect(260, 40, 61, 22))
         self.lineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_3.setObjectName("lineEdit_3")
+        self.lineEdit_21 = QtWidgets.QLineEdit(self.tab)
+        self.lineEdit_21.setGeometry(QtCore.QRect(330, 40, 61, 22))
+        self.lineEdit_21.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit_21.setObjectName("lineEdit_21")
         self.label_4 = QtWidgets.QLabel(self.tab)
         self.label_4.setGeometry(QtCore.QRect(10, 70, 91, 16))
         self.label_4.setObjectName("label_4")
@@ -227,7 +236,12 @@ class Ui_cpfcalui(object):
         self.line.setFrameShape(QtWidgets.QFrame.VLine)
         self.line.setObjectName("line")
         self.label_23 = QtWidgets.QLabel(cpfcalui)
-        self.label_23.setGeometry(QtCore.QRect(520, 30, 411, 111))
+        self.label_23.setGeometry(QtCore.QRect(520, 30, 1400, 111))
+        self.label_24 = QtWidgets.QLabel(cpfcalui)
+        self.label_24.setGeometry(QtCore.QRect(520, 610, 411, 251))
+        self.label_24.setText("")
+        self.label_24.setScaledContents(True)
+        self.label_24.setObjectName("label_24")
         font = QtGui.QFont()
         font.setFamily("MS Serif")
         font.setPointSize(12)
@@ -236,6 +250,12 @@ class Ui_cpfcalui(object):
         self.label_23.setFont(font)
         self.label_23.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label_23.setObjectName("label_23")
+        self.widget = QtWidgets.QWidget(cpfcalui)
+        self.widget.setGeometry(QtCore.QRect(530, 170, 391, 161))
+        self.widget.setObjectName("widget")
+        self.widget_2 = QtWidgets.QWidget(cpfcalui)
+        self.widget_2.setGeometry(QtCore.QRect(530, 350, 391, 161))
+        self.widget_2.setObjectName("widget_2")
         
     
 
@@ -263,6 +283,7 @@ class Ui_cpfcalui(object):
         self.label_6.setText(_translate("cpfcalui", "Age :"))
         self.label_7.setText(_translate("cpfcalui", "Salary :"))
         self.pushButton_2.setText(_translate("cpfcalui", "Del"))
+        self.lineEdit_21.setText(_translate("cpfcalui", "Medi"))
         self.label_8.setText(_translate("cpfcalui", "Top up amount per year :"))
         self.lineEdit_7.setText(_translate("cpfcalui", "$"))
         self.label_9.setText(_translate("cpfcalui", "HDB loan payment (Monthly) : "))
@@ -338,23 +359,102 @@ class Ui_cpfcalui(object):
         self.listWidget_2.repaint()
     
     def cal_cpf(self):
+        #DataType Checker
+        Error = ""
+        try:
+            i = int(self.lineEdit.text())
+        except ValueError:
+            Error += self.label_2.text() + " is not an integer value ! " + "\n"  
+        try:
+            i = int(self.lineEdit_2.text())
+        except ValueError:
+            Error += self.label_3.text() + " is not an integer value ! " + "\n"  
+        try:
+            i = int(self.lineEdit_3.text())
+        except ValueError:
+            Error += self.label_3.text() + " is not an integer value ! " + "\n"  
+        try:
+            i = int(self.lineEdit_4.text())
+        except ValueError:
+            Error += self.label_4.text() + " is not an integer value ! " + "\n"  
         #Convert own list to dataframe 
-        age = []
-        salary = []
-        for i in range(self.listWidget.count()):
-            word=str(self.listWidget.item(i).text())
-            first=word.find(":")
-            second=word.find("S")
-            age.append(word[first+1:second])
-            salary.append(word[second+9:len(word)])
-        d = {'Age': age, 'Salary': salary}
-        df = pd.DataFrame(data=d)
+        try:
+            age = []
+            salary = []
+            for i in range(self.listWidget.count()):
+                word=str(self.listWidget.item(i).text())
+                first=word.find(":")
+                second=word.find("S")
+                age.append(int(word[first+1:second]))
+                salary.append(int(word[second+9:len(word)]))
+            d = {'Age': age, 'Salary': salary}
+            ownList = pd.DataFrame(data=d)
+            print(ownList)
+        except ValueError:
+            Error += "Own Salary and age list contains a non integer pair ! " + "\n"
+            
+     
+        try:
+            i = int(self.lineEdit_7.text())
+        except ValueError:
+            Error += self.label_8.text() + " is not an integer value ! " + "\n"  
+        try:
+            i = int(self.lineEdit_8.text())
+        except ValueError:
+            Error += self.label_9.text() + " number of months is not an integer value ! " + "\n"  
+        try:
+            i = int(self.lineEdit_9.text())
+        except ValueError:
+            Error += self.label_9.text() + " age is not an integer value ! " + "\n"  
+        try:
+            i = int(self.lineEdit_10.text())
+        except ValueError:
+            Error += self.label_9.text() + " Amount is not an integer value ! " + "\n"  
+        
+        
+        
+            
+        #DataType Checker End 
+        
+        #if no error start calculating CPF
+        
+        if len(Error) == 0 : 
+            contribution = calculate_each_account(ownList)
+            a = person(int(self.lineEdit_4.text()),int(self.lineEdit_2.text()),int(self.lineEdit_3.text()),int(self.lineEdit_21.text()),contribution)
+            print(a.get_yearly_bal())
+            
+            if str(self.comboBox_2.currentText()) == "SP":
+                monthlyPayment = standardPlan(55,a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'],str(self.comboBox.currentText()))
+                if monthlyPayment == "Not Enough Money" :
+                    self.label_23.setText("You Have Not Enough Money For Retirement!")
+            if str(self.comboBox_2.currentText()) == "BP":
+                monthlyPayment = basic_plan(55,a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'],str(self.comboBox.currentText()))
+                if monthlyPayment == "Not Enough Money" :
+                    self.label_23.setText("You Have Not Enough Money For Retirement!")
+            if str(self.comboBox_2.currentText()) == "EP":
+                monthlyPayment = escalatingPlan(55,str(self.comboBox.currentText()),a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'])
+                if monthlyPayment == "Not Enough Money" :
+                    self.label_23.setText("You Have Not Enough Money For Retirement!")
+                
+                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            self.label_23.setText("You Have Enough Money For Retirement!")
+            QtMultimedia.QSound.play("a1jm9-bwm4f.wav")
+            self.label_24.setPixmap(QtGui.QPixmap("xzRPizGbLMMDQw7HBVotrFnKLULeZl6P.jpg"))
+        #if error stop and display error messages.
+        else :
+            self.label_23.setText(Error)
 
-        contribution_each_account.calculate_each_account(df)
-        # print(df)
-        self.label_23.setText("test")
-
-        # return df
+        
        
 
 
@@ -369,4 +469,3 @@ if __name__ == "__main__":
     cpfcalui.setWindowTitle("CPF Calculator")
     cpfcalui.setWindowIcon(QtGui.QIcon("O_m2BLlJ_400x400.png"))
     sys.exit(app.exec_())
-

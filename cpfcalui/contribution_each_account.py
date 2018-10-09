@@ -59,7 +59,7 @@ def calculate_each_account(df):
 			if(index_first_largest_age!=0):
 				index_first_largest_age-=1
 
-	    # To calculate the corresponding absolute amount contributed to each account for the first year
+		# To calculate the corresponding absolute amount contributed to each account for the first year
 		salary=int(df['Salary'][index_first_largest_age])
 		ordinary,special,medisave=calculation(salary,num_months,contribution_percentage.loc[[index_first_largest_age]]['Ordinary'].values[0],
 			contribution_percentage.loc[[index_first_largest_age]]['Special'].values[0],
@@ -80,6 +80,7 @@ def calculate_each_account(df):
 				final_contribution= final_contribution.append({'Age': starting_age, 'Ordinary': ordinary, 'Special': special,'Medisave':medisave}, ignore_index=True)
 			
 	print(final_contribution)
+	return(final_contribution)
 	
 if __name__== "__main__":
 
