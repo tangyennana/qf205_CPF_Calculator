@@ -15,6 +15,7 @@ from escalating import escalatingPlan
 from StandardPlan import standardPlan
 from basic_plan2 import basic_plan
 from GraphQT import GraphApp,PlotCanvas
+import time
 
 class Ui_cpfcalui(object):
     def setupUi(self, cpfcalui):
@@ -443,13 +444,12 @@ class Ui_cpfcalui(object):
                 
             
             
-            
-            
-            
-            
-            
-            
-            
+            # load the graph after calculation
+            df = a.yearly_bal
+            for index, row in df.iterrows():
+                self.graph.addData((int(row['Age']), row['OA'], row['SA'], row['Medi']))
+                #time.sleep(1)
+            self.graph.generate_plot()
             
             self.label_23.setText("You Have Enough Money For Retirement!")
             QtMultimedia.QSound.play("a1jm9-bwm4f.wav")

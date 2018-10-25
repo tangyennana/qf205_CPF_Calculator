@@ -28,7 +28,7 @@ class GraphApp(QWidget):
 
     # test button to generate data and refresh graph. ignore
     def buttonCallback(self):
-        self.c.addData((self.currentage, randint(100,1000), randint(100,1000),  randint(100,1000)))
+        self.c.addDataAndPlot((self.currentage, randint(100,1000), randint(100,1000),  randint(100,1000)))
         self.currentage+=1
 
 # widget for plotting graph
@@ -51,12 +51,16 @@ class PlotCanvas(FigureCanvas):
         self.generate_plot()
 
     # after adding new data, replot the data 
-    def addData(self, newdata):
+    def addDataAndPlot(self, newdata):
         self.data.append(newdata)
         self.axes.clear()
         self.generate_plot()
 
+    def addData(self, newdata):
+        self.data.append(newdata)
+
     def generate_plot(self):
+        self.axes.clear()
         if len(self.data)!=0:
             xaxis_values = [i[0] for i in self.data]
             self.axes.plot(xaxis_values,[i[1] for i in self.data], 'r-', label='Current account')
