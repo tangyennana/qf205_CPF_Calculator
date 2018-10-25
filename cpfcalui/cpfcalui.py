@@ -257,7 +257,11 @@ class Ui_cpfcalui(object):
         self.widget_2.setGeometry(QtCore.QRect(530, 350, 391, 161))
         self.widget_2.setObjectName("widget_2")
         
-    
+        # adding graph widget
+        self.graph = PlotCanvas(cpfcalui, width=5, height=5)
+        self.graph.setGeometry(QtCore.QRect(520, 100, 730, 500))
+        self.graph.setObjectName("graph")
+        # TODO: add self.graph.addData() method to add new data 
 
 
         self.retranslateUi(cpfcalui)
