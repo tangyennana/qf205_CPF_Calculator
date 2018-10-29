@@ -108,9 +108,6 @@ class Ui_cpfcalui(object):
         self.lineEdit_8 = QtWidgets.QLineEdit(self.tab)
         self.lineEdit_8.setGeometry(QtCore.QRect(190, 330, 91, 22))
         self.lineEdit_8.setObjectName("lineEdit_8")
-        self.lineEdit_9 = QtWidgets.QLineEdit(self.tab)
-        self.lineEdit_9.setGeometry(QtCore.QRect(290, 330, 61, 22))
-        self.lineEdit_9.setObjectName("lineEdit_9")
         self.lineEdit_10 = QtWidgets.QLineEdit(self.tab)
         self.lineEdit_10.setGeometry(QtCore.QRect(360, 330, 61, 22))
         self.lineEdit_10.setObjectName("lineEdit_10")
@@ -293,7 +290,6 @@ class Ui_cpfcalui(object):
         self.lineEdit_7.setText(_translate("cpfcalui", "$"))
         self.label_9.setText(_translate("cpfcalui", "HDB loan payment (Monthly) : "))
         self.lineEdit_8.setText(_translate("cpfcalui", "No. of months"))
-        self.lineEdit_9.setText(_translate("cpfcalui", "Age"))
         self.lineEdit_10.setText(_translate("cpfcalui", "$"))
         self.label_10.setText(_translate("cpfcalui", "Retirement account savings @ 55 :"))
         self.comboBox.setItemText(0, _translate("cpfcalui", "BRS"))
@@ -408,10 +404,6 @@ class Ui_cpfcalui(object):
         except ValueError:
             Error += self.label_9.text() + " number of months is not an integer value ! " + "\n"  
         try:
-            i = int(self.lineEdit_9.text())
-        except ValueError:
-            Error += self.label_9.text() + " age is not an integer value ! " + "\n"  
-        try:
             i = int(self.lineEdit_10.text())
         except ValueError:
             Error += self.label_9.text() + " Amount is not an integer value ! " + "\n"  
@@ -425,7 +417,7 @@ class Ui_cpfcalui(object):
         
         if len(Error) == 0 : 
             contribution = calculate_each_account(ownList)
-            a = person(int(self.lineEdit_4.text()),int(self.lineEdit_2.text()),int(self.lineEdit_3.text()),int(self.lineEdit_21.text()),contribution)
+            a = person(int(self.lineEdit_4.text()),int(self.lineEdit_2.text()),int(self.lineEdit_3.text()),int(self.lineEdit_21.text()),contribution,int(self.lineEdit_7.text()),int(self.lineEdit_8.text()),int(self.lineEdit_10.text()))
             print(a.get_yearly_bal())
             
             if str(self.comboBox_2.currentText()) == "SP":

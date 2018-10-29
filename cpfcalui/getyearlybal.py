@@ -7,13 +7,11 @@ int_SA = 0.04
 int_Medi = 0.04
 
 class person(object):
-    def __init__(self, curr_age, curr_OA, curr_SA, curr_Medi,yearly_contri, targ_excess=0, salary=[], topup=0, hdb_mth=20, hdb_amt=100, *args):
+    def __init__(self, curr_age, curr_OA, curr_SA, curr_Medi,yearly_contri,  topup, hdb_mth, hdb_amt, *args):
         self.curr_age = curr_age
         self.curr_OA = curr_OA # during the december of the previous year
         self.curr_SA = curr_SA # during the december of the previous year
         self.curr_Medi = curr_Medi
-        self.targ_excess = targ_excess
-        self.salary = salary
         self.topup = topup
         self.hdb_mth = hdb_mth
         self.hdb_amt = hdb_amt
@@ -36,6 +34,7 @@ class person(object):
         age = self.curr_age
         OA = self.curr_OA
         SA = self.curr_SA
+        topupAmt = self.topup
         Medi = self.curr_Medi
         yearly_bal = self.yearly_bal
         yearly_contri = self.yearly_contri
@@ -52,9 +51,9 @@ class person(object):
             hdb_mth = hdb_mth-paying_mth # determine total no. of months left for payment
             
             # (balance + contribution - any loan payment)*(1 + interest rate)
-            OA = (OA+yearly_contri.loc[age]['Ordinary']-(paying_mth*hdb_amt))*(1+int_OA) 
-            SA = (SA+yearly_contri.loc[age]['Special'])*(1+int_SA)
-            Medi = (Medi+yearly_contri.loc[age]['Medisave'])*(1+int_Medi)
+            OA = (OA+yearly_contri.loc[age]['Ordinary']+topupAmt-(paying_mth*hdb_amt))*(1+int_OA) 
+            SA = (SA+yearly_contri.loc[age]['Special'])*(1+int_SA)+topupAmt
+            Medi = (Medi+yearly_contri.loc[age]['Medisave'])*(1+int_Medi)+topupAmt
             yearly_bal = yearly_bal.append({'Age': age,'OA': OA,'SA': SA, 'Medi': Medi} ,ignore_index=True)
             age += 1
             int += 1
