@@ -4,6 +4,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from random import randint
+import copy
+from functools import reduce
 
 class GraphApp(QWidget):
     def __init__(self):
@@ -59,17 +61,29 @@ class PlotCanvas(FigureCanvas):
     def addData(self, newdata):
         self.data.append(newdata)
 
+    def addMonthlyPayment(self, monthlypayment):
+        monthlypayment = copy.deepcopy(monthlypayment)
+        monthlypayment = [payment*12 for payment in monthlypayment]
+        self.cumMonthlyPayment = reduce(lambda c, x: c + [c[-1] + x], monthlypayment, [0])[1:]
+
+    def refresh(self):
+        self.data = []
+        self.cumMonthlyPayment = []
+
     def generate_plot(self):
         self.axes.clear()
         if len(self.data)!=0:
             xaxis_values, ca, sa, med = zip(*self.data)
+            next_xaxis_values = [(max(xaxis_values)+i+1) for i in range(len(self.cumMonthlyPayment))]
             self.axes.plot(xaxis_values, ca, 'r-', label='Current account')
             self.axes.plot(xaxis_values, sa, 'b-', label='Special account')
             self.axes.plot(xaxis_values, med, 'g-', label='Medisave')
-            max_xlim = max(xaxis_values)+5 # +5 years for margin
-            self.axes.set_xlim([max(min(xaxis_values), max_xlim-30), max_xlim]) # x axis shows 30 years only
-            #self.axes.set_xlim([min(xaxis_values), max_xlim])
-            self.axes.set_ylim([0, max([max(i[1:4]) for i in self.data])+100]) # +100 for margin
+            self.axes.plot(next_xaxis_values, self.cumMonthlyPayment, 'm-', label='Annual Payout after 55 years old')
+            total_xaxis_values = list(xaxis_values)
+            total_xaxis_values.extend(next_xaxis_values)
+            max_xlim = max(total_xaxis_values)
+            self.axes.set_xlim([max(min(total_xaxis_values), max_xlim-60), max_xlim]) # x axis shows 60 years only
+            self.axes.set_ylim([0, max(max(ca), max(sa), max(med), max(self.cumMonthlyPayment))+100]) # +100 for margin
         
         # default display
         else:

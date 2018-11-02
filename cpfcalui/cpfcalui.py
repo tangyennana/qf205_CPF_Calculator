@@ -255,27 +255,29 @@ class Ui_cpfcalui(object):
         self.widget_2.setGeometry(QtCore.QRect(530, 350, 391, 161))
         self.widget_2.setObjectName("widget_2")
         
-        # adding graph widget
-        self.graph = PlotCanvas(cpfcalui, width=5, height=5)
-        self.graph.setGeometry(QtCore.QRect(520, 100, 730, 500))
-        self.graph.setObjectName("graph")
+        # # adding graph widget
+        self.instantiateGraph()
         # TODO: add self.graph.addData() method to add new data 
-
 
         self.retranslateUi(cpfcalui)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(cpfcalui)
     
+    def instantiateGraph(self):
+        # adding graph widget
+        self.graph = PlotCanvas(cpfcalui, width=5, height=5)
+        self.graph.setGeometry(QtCore.QRect(520, 100, 730, 500))
+        self.graph.setObjectName("graph")
 
     def retranslateUi(self, cpfcalui):
         _translate = QtCore.QCoreApplication.translate
         cpfcalui.setWindowTitle(_translate("cpfcalui", "Dialog"))
         self.label.setText(_translate("cpfcalui", "CPF CALCULATOR"))
         self.label_2.setText(_translate("cpfcalui", "Target Excess Amount For Withdrawal :"))
-        self.lineEdit.setText(_translate("cpfcalui", ""))
+        self.lineEdit.setText(_translate("cpfcalui", "2000"))
         self.label_3.setText(_translate("cpfcalui", "Current amount in accounts :"))
-        self.lineEdit_2.setText(_translate("cpfcalui", "OA"))
-        self.lineEdit_3.setText(_translate("cpfcalui", "SA"))
+        self.lineEdit_2.setText(_translate("cpfcalui", "5000"))
+        self.lineEdit_3.setText(_translate("cpfcalui", "5000"))
         self.label_4.setText(_translate("cpfcalui", "Current Age :"))
         self.label_5.setText(_translate("cpfcalui", "Salary at age :"))
         __sortingEnabled = self.listWidget.isSortingEnabled()
@@ -285,12 +287,12 @@ class Ui_cpfcalui(object):
         self.label_6.setText(_translate("cpfcalui", "Age :"))
         self.label_7.setText(_translate("cpfcalui", "Salary :"))
         self.pushButton_2.setText(_translate("cpfcalui", "Del"))
-        self.lineEdit_21.setText(_translate("cpfcalui", "Medi"))
+        self.lineEdit_21.setText(_translate("cpfcalui", "5000"))
         self.label_8.setText(_translate("cpfcalui", "Top up amount per year :"))
-        self.lineEdit_7.setText(_translate("cpfcalui", ""))
+        self.lineEdit_7.setText(_translate("cpfcalui", "1000"))
         self.label_9.setText(_translate("cpfcalui", "HDB loan payment:(# Months, Amount) "))
-        self.lineEdit_8.setText(_translate("cpfcalui", ""))
-        self.lineEdit_10.setText(_translate("cpfcalui", ""))
+        self.lineEdit_8.setText(_translate("cpfcalui", "24"))
+        self.lineEdit_10.setText(_translate("cpfcalui", "2000"))
         self.label_10.setText(_translate("cpfcalui", "Retirement account savings @ 55 :"))
         self.comboBox.setItemText(0, _translate("cpfcalui", "BRS"))
         self.comboBox.setItemText(1, _translate("cpfcalui", "FRS"))
@@ -437,10 +439,15 @@ class Ui_cpfcalui(object):
             
             
             # load the graph after calculation
+            # if self.graph:
+            #     self.instantiateGraph()
+            self.graph.refresh()
             df = a.yearly_bal
             for index, row in df.iterrows():
                 self.graph.addData((int(row['Age']), row['OA'], row['SA'], row['Medi']))
                 #time.sleep(1)
+            #print('monthly payment', monthlyPayment)
+            self.graph.addMonthlyPayment(monthlyPayment)
             self.graph.generate_plot()
             
             self.label_23.setText("You Have Enough Money For Retirement!")
