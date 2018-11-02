@@ -62,10 +62,10 @@ class PlotCanvas(FigureCanvas):
     def generate_plot(self):
         self.axes.clear()
         if len(self.data)!=0:
-            xaxis_values = [i[0] for i in self.data]
-            self.axes.plot(xaxis_values,[i[1] for i in self.data], 'r-', label='Current account')
-            self.axes.plot(xaxis_values,[i[2] for i in self.data], 'b-', label='Special account')
-            self.axes.plot(xaxis_values,[i[3] for i in self.data], 'g-', label='Medisave')
+            xaxis_values, ca, sa, med = zip(*self.data)
+            self.axes.plot(xaxis_values, ca, 'r-', label='Current account')
+            self.axes.plot(xaxis_values, sa, 'b-', label='Special account')
+            self.axes.plot(xaxis_values, med, 'g-', label='Medisave')
             max_xlim = max(xaxis_values)+5 # +5 years for margin
             self.axes.set_xlim([max(min(xaxis_values), max_xlim-30), max_xlim]) # x axis shows 30 years only
             #self.axes.set_xlim([min(xaxis_values), max_xlim])
