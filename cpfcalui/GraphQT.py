@@ -83,7 +83,7 @@ class PlotCanvas(FigureCanvas):
             total_xaxis_values.extend(next_xaxis_values)
             max_xlim = max(total_xaxis_values)
             self.axes.set_xlim([max(min(total_xaxis_values), max_xlim-60), max_xlim]) # x axis shows 60 years only
-            self.axes.set_ylim([0, max(max(ca), max(sa), max(med), max(self.cumMonthlyPayment))+100]) # +100 for margin
+            self.axes.set_ylim([0, max(ca+sa+med+self.cumMonthlyPayment)+100]) # +100 for margin
         
         # default display
         else:
