@@ -432,15 +432,17 @@ class Ui_cpfcalui(object):
                 monthlyPayment = escalatingPlan(55,str(self.comboBox.currentText()),a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'])
                 if monthlyPayment == "Not Enough Money" :
                     self.label_23.setText("You Have Not Enough Money For Retirement!")
-                
-                
-            
             
             # load the graph after calculation
+            # if self.graph:
+            #     self.instantiateGraph()
+            self.graph.refresh()
             df = a.yearly_bal
             for index, row in df.iterrows():
                 self.graph.addData((int(row['Age']), row['OA'], row['SA'], row['Medi']))
                 #time.sleep(1)
+            #print('monthly payment', monthlyPayment)
+            self.graph.addMonthlyPayment(monthlyPayment)
             self.graph.generate_plot()
             
             self.label_23.setText("You Have Enough Money For Retirement!")

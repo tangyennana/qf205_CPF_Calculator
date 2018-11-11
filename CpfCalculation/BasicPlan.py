@@ -1,4 +1,4 @@
-def basic_plan(age,oa,sa,sum_type,have_HDB):
+def basic_plan(age,oa,sa,sum_type):
 	#only for age 55 and above!
     if age<55:
         return("Minimum age is 55.")
