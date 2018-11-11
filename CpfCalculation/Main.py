@@ -444,8 +444,7 @@ class Ui_cpfcalui(object):
             self.graph.generate_plot()
             
             self.label_23.setText("You Have Enough Money For Retirement!")
-            QtMultimedia.QSound.play("SuccessfulRetirementSong.wav")
-            self.label_24.setPixmap(QtGui.QPixmap("SuccessfulRetirementImage.jpg"))
+            
         #if error stop and display error messages.
         else :
             self.label_23.setText(Error)
