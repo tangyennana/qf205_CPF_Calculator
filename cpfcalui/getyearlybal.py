@@ -19,15 +19,14 @@ class person(object):
         self.yearly_contri = yearly_contri
         
     # dummy function
-    def make_contri(self):
-        age = self.curr_age
-        yearly_contri = self.yearly_contri
-        while age <= 55:
-            yearly_contri = yearly_contri.append({'Age':age,'OA':10000,'SA':5000,'Medi':5000},ignore_index=True)
-            age +=1
-        self.yearly_contri = yearly_contri
-        print(yearly_contri)
-
+#     def make_contri(self):
+#         age = self.curr_age
+#         yearly_contri = self.yearly_contri
+#         while age <= 55:
+#             yearly_contri = yearly_contri.append({'Age':age,'OA':10000,'SA':5000,'Medi':5000},ignore_index=True)
+#             age +=1
+#         self.yearly_contri = yearly_contri
+#         print(yearly_contri)
 
     def get_yearly_bal(self):
         
@@ -43,7 +42,6 @@ class person(object):
         hdb_mth = self.hdb_mth
         hdb_amt = self.hdb_amt
         yearly_contri = yearly_contri.set_index(['Age'])
-        int = 0
         while age <= 55:
             remain_mth = 13-curr_mth # catch initial remaining months depending on date of calculation
             curr_mth = 1 # reset current month to count from the start of each year
@@ -56,7 +54,6 @@ class person(object):
             Medi = (Medi+yearly_contri.loc[age]['Medisave'])*(1+int_Medi)+topupAmt
             yearly_bal = yearly_bal.append({'Age': age,'OA': OA,'SA': SA, 'Medi': Medi} ,ignore_index=True)
             age += 1
-            int += 1
         self.yearly_bal = yearly_bal 
         return yearly_bal
         # display(self.yearlybal)
