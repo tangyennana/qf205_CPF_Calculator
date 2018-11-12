@@ -74,11 +74,11 @@ class PlotCanvas(FigureCanvas):
         self.axes.clear()
         if len(self.data)!=0:
             xaxis_values, ca, sa, med = zip(*self.data)
-            next_xaxis_values = [(max(xaxis_values)+i+1) for i in range(len(self.cumMonthlyPayment))]
+            next_xaxis_values = [(max(xaxis_values)+10+i+1) for i in range(len(self.cumMonthlyPayment))]
             self.axes.plot(xaxis_values, ca, 'r-', label='Current account')
             self.axes.plot(xaxis_values, sa, 'b-', label='Special account')
             self.axes.plot(xaxis_values, med, 'g-', label='Medisave')
-            self.axes.plot(next_xaxis_values, self.cumMonthlyPayment, 'm-', label='Annual Payout after 55 years old')
+            self.axes.plot(next_xaxis_values, self.cumMonthlyPayment, 'm-', label='Annual Payout after 65 years old')
             total_xaxis_values = list(xaxis_values)
             total_xaxis_values.extend(next_xaxis_values)
             max_xlim = max(total_xaxis_values)
@@ -92,7 +92,7 @@ class PlotCanvas(FigureCanvas):
         
         self.axes.set_xlabel('Age in years')
         self.axes.set_ylabel('Amount of money in SGD')
-        self.axes.set_title('CPF contribution over the years')
+        self.axes.set_title('CPF contribution and payout over the years')
         self.axes.legend()
         self.figure.canvas.draw_idle()
 
