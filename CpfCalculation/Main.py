@@ -420,19 +420,6 @@ class Ui_cpfcalui(object):
             a = person(int(self.lineEdit_4.text()),int(self.lineEdit_2.text()),int(self.lineEdit_3.text()),int(self.lineEdit_21.text()),contribution,int(self.lineEdit_7.text()),int(self.lineEdit_8.text()),int(self.lineEdit_10.text()))
             print(a.get_yearly_bal())
             
-            if str(self.comboBox_2.currentText()) == "SP":
-                monthlyPayment = standardPlan(55,a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'],str(self.comboBox.currentText()))
-                if monthlyPayment == "Not Enough Money" :
-                    self.label_23.setText("You Have Not Enough Money For Retirement!")
-            if str(self.comboBox_2.currentText()) == "BP":
-                monthlyPayment = basic_plan(55,a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'],str(self.comboBox.currentText()))
-                if monthlyPayment == "Not Enough Money" :
-                    self.label_23.setText("You Have Not Enough Money For Retirement!")
-            if str(self.comboBox_2.currentText()) == "EP":
-                monthlyPayment = escalatingPlan(55,str(self.comboBox.currentText()),a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'])
-                if monthlyPayment == "Not Enough Money" :
-                    self.label_23.setText("You Have Not Enough Money For Retirement!")
-            
             # load the graph after calculation
             # if self.graph:
             #     self.instantiateGraph()
@@ -442,10 +429,53 @@ class Ui_cpfcalui(object):
                 self.graph.addData((int(row['Age']), row['OA'], row['SA'], row['Medi']))
                 #time.sleep(1)
             #print('monthly payment', monthlyPayment)
-            self.graph.addMonthlyPayment(monthlyPayment)
+
+            if str(self.comboBox_2.currentText()) == "SP":
+                monthlyPayment = standardPlan(55,a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'],str(self.comboBox.currentText()))
+                if monthlyPayment == "Not Enough Money" :
+                    self.label_23.setText("You Have Not Enough Money For Retirement!")
+                else:
+                    self.graph.addMonthlyPayment(monthlyPayment)
+                    if a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -17100 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="BRS" or str(self.comboBox.currentText())=="FRS" :
+                        self.label_23.setText("You Have  Enough Money For Retirement! But dont meet your desired excess")
+                    elif a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -256500 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="ERS" :
+                        self.label_23.setText("You Have  Enough Money For Retirement! But dont meet your desired excess")    
+                    else:
+                        self.label_23.setText("You Have  Enough Money For Retirement! And meet your desired excess")
+            if str(self.comboBox_2.currentText()) == "BP":
+                monthlyPayment = basic_plan(55,a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'],str(self.comboBox.currentText()))
+                if monthlyPayment == "Not Enough Money" :
+                    self.label_23.setText("You Have Not Enough Money For Retirement!")
+                else:
+                    self.graph.addMonthlyPayment(monthlyPayment)
+                    if a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -17100 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="BRS" or str(self.comboBox.currentText())=="FRS":
+                        self.label_23.setText("You Have  Enough Money For Retirement! But dont meet your desired excess")
+                    elif a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -256500 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="ERS" :
+                        self.label_23.setText("You Have  Enough Money For Retirement! But dont meet your desired excess")    
+                    else:
+                        self.label_23.setText("You Have  Enough Money For Retirement! And meet your desired excess")
+            if str(self.comboBox_2.currentText()) == "EP":
+                monthlyPayment = escalatingPlan(55,str(self.comboBox.currentText()),a.yearly_bal.iloc[-1]['OA'],a.yearly_bal.iloc[-1]['SA'])
+                if monthlyPayment == "Not Enough Money" :
+                    self.label_23.setText("You Have Not Enough Money For Retirement!")
+                else:
+                    self.graph.addMonthlyPayment(monthlyPayment)
+                    if a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -85500 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="BRS" :
+                        self.label_23.setText("You Have  Enough Money For Retirement! But dont meet your desired excess")
+                    elif a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -256500 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="ERS" :
+                        self.label_23.setText("You Have  Enough Money For Retirement! But dont meet your desired excess")    
+                    elif a.yearly_bal.iloc[-1]['OA'] + a.yearly_bal.iloc[-1]['SA'] -17100 < int(self.lineEdit.text()) and str(self.comboBox.currentText())=="FRS" :
+                        self.label_23.setText("You Have  Enough Money For Retirement! But meet your desired excess")
+                    else :
+                        self.label_23.setText("You Have  Enough Money For Retirement! And meet your desired excess")
+            
+            
             self.graph.generate_plot()
             
-            self.label_23.setText("You Have Enough Money For Retirement!")
+            
+            
+            if(self.label_23.text()==""):
+                self.label_23.setText("You Have Enough Money For Retirement!")
             
         #if error stop and display error messages.
         else :
